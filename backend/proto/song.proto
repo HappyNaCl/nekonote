@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package song;
+
+service SongService {
+    rpc GetSongs (GetSongsRequest) returns (GetSongsResponse);
+}
+
+message Song {
+    string id = 1;
+    string title = 2;
+}
+
+message GetSongsRequest {
+
+}
+
+message GetSongsResponse {
+    repeated Song song = 1;
+}
