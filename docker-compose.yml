@@ -1,0 +1,52 @@
+services:
+  database:
+    image: postgres:16
+    container_name: nekonote-db
+    environment:
+      POSTGRES_USER: nekonote
+      POSTGRES_PASSWORD: nekonote
+    ports:
+      - "5432:5432"
+    volumes:
+      - nekonote-db-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - network
+
+  redis:
+    image: redis:latest
+    container_name: nekonote-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - network
+
+  minio:
+    image: minio/minio:latest
+    container_name: nekonote-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: nekonote
+      MINIO_ROOT_PASSWORD: nekonote
+      MINIO_DEFAULT_BUCKET: nekonote
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+volumes:
+  nekonote-db-data:
+    driver: local
+  minio_data:
+    driver: local
+  redis_data:
+    driver: local
