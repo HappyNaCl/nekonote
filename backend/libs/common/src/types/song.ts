@@ -15,26 +15,43 @@ export interface Song {
   title: string;
 }
 
-export interface GetSongsRequest {
+export interface CreateSongRequest {
+  title: string;
 }
 
-export interface GetSongsResponse {
-  song: Song[];
+export interface CreateSongResponse {
+  id: string;
+  title: string;
+}
+
+export interface FindALlSongsRequest {
+}
+
+export interface FindAllSongsResponse {
+  songs: Song[];
 }
 
 export const SONG_PACKAGE_NAME = "song";
 
 export interface SongServiceClient {
-  getSongs(request: GetSongsRequest): Observable<GetSongsResponse>;
+  findAllSongs(request: FindALlSongsRequest): Observable<FindAllSongsResponse>;
+
+  createSong(request: CreateSongRequest): Observable<CreateSongResponse>;
 }
 
 export interface SongServiceController {
-  getSongs(request: GetSongsRequest): Promise<GetSongsResponse> | Observable<GetSongsResponse> | GetSongsResponse;
+  findAllSongs(
+    request: FindALlSongsRequest,
+  ): Promise<FindAllSongsResponse> | Observable<FindAllSongsResponse> | FindAllSongsResponse;
+
+  createSong(
+    request: CreateSongRequest,
+  ): Promise<CreateSongResponse> | Observable<CreateSongResponse> | CreateSongResponse;
 }
 
 export function SongServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getSongs"];
+    const grpcMethods: string[] = ["findAllSongs", "createSong"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("SongService", method)(constructor.prototype[method], method, descriptor);

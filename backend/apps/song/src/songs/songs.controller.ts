@@ -1,7 +1,9 @@
 import { Controller } from "@nestjs/common";
 import { SongsService } from "./songs.service";
 import {
-  GetSongsResponse,
+  CreateSongRequest,
+  CreateSongResponse,
+  FindAllSongsResponse,
   SongServiceController,
   SongServiceControllerMethods,
 } from "@app/common";
@@ -11,7 +13,13 @@ import {
 export class SongsController implements SongServiceController {
   constructor(private readonly songsService: SongsService) {}
 
-  getSongs(): GetSongsResponse {
-    return this.songsService.getSongs();
+  async findAllSongs(): Promise<FindAllSongsResponse> {
+    const songs = await this.songsService.findAllSongs();
+    return { songs };
+  }
+
+  async createSong(request: CreateSongRequest): Promise<CreateSongResponse> {
+    const createdSong = await this.songsService.createSong({ ...request });
+    return { ...createdSong };
   }
 }

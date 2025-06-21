@@ -3,7 +3,8 @@ syntax = "proto3";
 package song;
 
 service SongService {
-    rpc GetSongs (GetSongsRequest) returns (GetSongsResponse);
+    rpc FindAllSongs (FindALlSongsRequest) returns (FindAllSongsResponse);
+    rpc CreateSong (CreateSongRequest) returns (CreateSongResponse);
 }
 
 message Song {
@@ -11,10 +12,18 @@ message Song {
     string title = 2;
 }
 
-message GetSongsRequest {
+message CreateSongRequest {
+    string title = 1;
+}
+message CreateSongResponse {
+    string id = 1;
+    string title = 2;
+}
+
+message FindALlSongsRequest {
 
 }
 
-message GetSongsResponse {
-    repeated Song song = 1;
+message FindAllSongsResponse {
+    repeated Song songs = 1;
 }

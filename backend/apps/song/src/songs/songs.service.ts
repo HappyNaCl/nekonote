@@ -1,20 +1,20 @@
-import { Song } from "@app/common";
+import { CreateSongRequest, Song } from "@app/common";
+import { PrismaService } from "@app/common/prisma";
 import { Injectable, OnModuleInit } from "@nestjs/common";
 
 @Injectable()
-export class SongsService implements OnModuleInit {
-  private readonly songs: Song[] = [];
+export class SongsService {
+  constructor(private readonly prisma: PrismaService) {}
 
-  onModuleInit() {
-    for (let i = 1; i <= 10; i++) {
-      this.songs.push({
-        id: i.toString(),
-        title: `Song ${i}`,
-      });
-    }
+  async findAllSongs() {
+    return await this.prisma.song.findMany();
   }
 
-  getSongs() {
-    return { song: this.songs };
+  async createSong(song: CreateSongRequest) {
+    return await this.prisma.song.create({
+      data: {
+        title: song.title,
+      },
+    });
   }
 }
